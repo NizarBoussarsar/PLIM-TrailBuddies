@@ -141,7 +141,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Reference Include="Parse, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Parse.1.6.1\lib\wpa81\Parse.dll</HintPath>

@@ -8,7 +8,7 @@ namespace BackgroundGps.WinRT.Models
 {
     public class User
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
         public int NbrEasyTrails { get; set; }
@@ -16,6 +16,8 @@ namespace BackgroundGps.WinRT.Models
         public int NbrHardTrails { get; set; }
         public string CreationDate { get; set; }
         public string LastUpdateDate { get; set; }
+        public int Xp { get; set; }
+        public int nbTrails { get; set; }
 
         public User()
         {
@@ -33,6 +35,6 @@ namespace BackgroundGps.WinRT.Models
             LastUpdateDate = DateTime.Now.ToString();
         }
 
-        public virtual ICollection<Trail> Trails { get; set; }
+        //public virtual ICollection<Trail> Trails { get; set; }
     }
 }

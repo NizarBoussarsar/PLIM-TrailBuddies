@@ -27,7 +27,8 @@ namespace BackgroundGps.WinRT
     /// </summary>
     public sealed partial class FindPeople : Page
     {
-        private List<Trail> trails;
+        private List<User> users;
+        private User userConnected;
         private string username;
 
         public FindPeople()
@@ -42,10 +43,10 @@ namespace BackgroundGps.WinRT
                 MessageDialog warningDialog = new MessageDialog("We couldn't get Parse to work, please try to connect to a Wifi", "Parse BaaS");
                 warningDialog.ShowAsync();
             }
+            //System.Diagnostics.Debug.WriteLine("XP : " + xp);
 
-            GetAllTrails();
-
-
+            users = new List<User>();
+            GetAllUsers();
         }
 
         /// <summary>
@@ -58,67 +59,40 @@ namespace BackgroundGps.WinRT
             username = e.Parameter.ToString();
         }
 
-        private async Task GetAllTrails()
+        private async void GetAllUsers()
         {
-            trails = new List<Trail>();
-
-            var query = ParseObject.GetQuery("Trail").WhereNotEqualTo("objectId", "toto");
+            var query = ParseObject.GetQuery("Usr").WhereNotEqualTo("objectId", "toto");
             IEnumerable<ParseObject> results = await query.FindAsync();
-
-            foreach (var item in results)
+            foreach (ParseObject item in results)
             {
-                Trail trail = new Trail();
-                trail.Distance = item.Get<float>("distance");
-                trail.Duration = (int)item.Get<double>("duration");
-                trail.Id = item.ObjectId;
-                trails.Add(trail);
-            }
-
-            Kmeans.Init(trails);
-            int[] clusters = Kmeans.Cluster(Kmeans.rawData, 3);
-
-            List<ParseObject> listResult = new List<ParseObject>();
-
-            for (int i = 0; i < results.Count(); i++)
-            {
-                ParseObject pObject = results.ElementAt(i);
-                pObject["clusterId"] = clusters[i];
-                listResult.Add(pObject);
-                await pObject.SaveAsync();
-            }
-
-            GetX(listResult);
-        }
-
-        private void GetX(List<ParseObject> listResult)
-        {
-            int zero = 0, one = 0, two = 0;
-            foreach (var item in listResult)
-            {
-                if (item.Get<string>("userId") == username)
+                User u = new User()
                 {
-                    switch (item.Get<int>("clusterId"))
-                    {
-                        case 0:
-                            zero++;
-                            break;
-                        case 1:
-                            one++;
-                            break;
-                        case 2:
-                            two++;
-                            break;
-                        default:
-                            break;
-                    }
+                    Id = item.ObjectId,
+                    Name = item.Get<string>("Username"),
+                    NbrEasyTrails = item.Get<int>("Easy"),
+                    NbrMediumTrails = item.Get<int>("Medium"),
+                    NbrHardTrails = item.Get<int>("Hard"),
+                };
+
+                int easyScore = (u.NbrEasyTrails % 5) * 1;
+                int mediumScore = (u.NbrMediumTrails % 3) * 2;
+                int hardScore = (u.NbrHardTrails % 1) * 3;
+
+                u.nbTrails = u.NbrEasyTrails + u.NbrMediumTrails + u.NbrHardTrails;
+                u.Xp = easyScore + mediumScore + hardScore;
+
+                System.Diagnostics.Debug.WriteLine("XP : " + u.Xp + " NB : " + u.nbTrails);
+
+                if (u.Name == username)
+                {
+                    userConnected = u;
+                }
+                else
+                {
+                    users.Add(u);
                 }
             }
-            System.Diagnostics.Debug.WriteLine("Zero " + zero + " One " + one + " Two " + two);
         }
-
-
-
-
 
     }
 }

@@ -16,6 +16,9 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Parse;
+using BackgroundGps.WinRT.Models;
+using System.Threading.Tasks;
+using BackgroundGps.WinRT.ViewModel;
 
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
@@ -31,10 +34,9 @@ namespace BackgroundGps.WinRT
         private BackgroundTaskRegistration deviceUseTask;
         private DateTime startTime, endTime;
         private TimeSpan duration;
-
-        private List<string> coordonates = new List<string>();
-
-
+        private string username;
+        private List<string> coordonates;
+        private List<Trail> trails;
 
         public MainPage()
         {
@@ -43,6 +45,8 @@ namespace BackgroundGps.WinRT
             TrackLocationButton.Click += MainPage_Loaded;
 
             this.NavigationCacheMode = NavigationCacheMode.Required;
+
+            coordonates = new List<string>();
 
             //Buton
             StoptrackingButton.IsEnabled = false;
@@ -57,9 +61,6 @@ namespace BackgroundGps.WinRT
                 MessageDialog warningDialog = new MessageDialog("We couldn't get Parse to work, please try to connect to a Wifi", "Parse BaaS");
                 warningDialog.ShowAsync();
             }
-
-
-
         }
 
         async void MainPage_Loaded(object sender, RoutedEventArgs e)
@@ -149,13 +150,7 @@ namespace BackgroundGps.WinRT
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            // TODO: Prepare page for display here.
-
-            // TODO: If your application contains multiple pages, ensure that you are
-            // handling the hardware Back button by registering for the
-            // Windows.Phone.UI.Input.HardwareButtons.BackPressed event.
-            // If you are using the NavigationHelper provided by some templates,
-            // this event is handled for you.
+            username = e.Parameter.ToString();
         }
 
         private void TrackLocationButton_Click(object sender, RoutedEventArgs e)
@@ -210,27 +205,94 @@ namespace BackgroundGps.WinRT
                 double dist = (double)tmp;
 
 
-                System.Diagnostics.Debug.WriteLine(" FINAL Dist : " + dist);
+                System.Diagnostics.Debug.WriteLine("FINAL Dist : " + dist);
 
                 /// PARSE
                 /// 
                 var trailObject = new ParseObject("Trail");
                 trailObject["distance"] = dist;
                 trailObject["duration"] = duration.TotalMinutes;
+                trailObject["userId"] = username;
 
                 await trailObject.SaveAsync();
 
                 progressRing.IsActive = false;
 
+                //
+                GetAllTrails();
 
             }
-
-
         }
 
+        private async Task GetAllTrails()
+        {
+            trails = new List<Trail>();
 
+            var query = ParseObject.GetQuery("Trail").WhereNotEqualTo("objectId", "toto");
+            IEnumerable<ParseObject> results = await query.FindAsync();
 
+            foreach (var item in results)
+            {
+                Trail trail = new Trail();
+                trail.Distance = item.Get<float>("distance");
+                trail.Duration = (int)item.Get<double>("duration");
+                trail.Id = item.ObjectId;
+                trails.Add(trail);
+            }
 
+            Kmeans.Init(trails);
+            int[] clusters = Kmeans.Cluster(Kmeans.rawData, 3);
+
+            List<ParseObject> listResult = new List<ParseObject>();
+
+            for (int i = 0; i < results.Count(); i++)
+            {
+                ParseObject pObject = results.ElementAt(i);
+                pObject["clusterId"] = clusters[i];
+                listResult.Add(pObject);
+                await pObject.SaveAsync();
+            }
+
+            GetX(listResult);
+        }
+
+        private async void GetX(List<ParseObject> listResult)
+        {
+            int zero = 0, one = 0, two = 0;
+            foreach (var item in listResult)
+            {
+                if (item.Get<string>("userId") == username)
+                {
+                    switch (item.Get<int>("clusterId"))
+                    {
+                        case 0:
+                            zero++;
+                            break;
+                        case 1:
+                            one++;
+                            break;
+                        case 2:
+                            two++;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            var query = ParseObject.GetQuery("Usr").WhereEqualTo("Username", username);
+            IEnumerable<ParseObject> results = await query.FindAsync();
+            foreach (var user in results)
+            {
+                //Temporary solution because we are not sure about which class represents which level
+                user["Easy"] = zero;
+                user["Medium"] = one;
+                user["Hard"] = two;
+                await user.SaveAsync();
+            }
+
+            System.Diagnostics.Debug.WriteLine("Zero " + zero + " One " + one + " Two " + two);
+        }
 
     }
 
