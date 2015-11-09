@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Parse;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -47,7 +49,28 @@ namespace BackgroundGps.WinRT
 
         private void btnFind_Click(object sender, RoutedEventArgs e)
         {
+            /*
+            await ComputeUsersExperiences(username);
+            string param = username + "#" + xp;
+            Frame.Navigate(typeof(FindPeople), param);
+            */
             Frame.Navigate(typeof(FindPeople), username);
         }
+
+        /*
+        private async Task ComputeUsersExperiences(string name)
+        {
+            int easyScore = 0, mediumScore = 0, hardScore = 0;
+            var query = ParseObject.GetQuery("Usr").WhereEqualTo("Username", name);
+            IEnumerable<ParseObject> results = await query.FindAsync();
+            foreach (var user in results)
+            {
+                easyScore = (user.Get<int>("Easy") % 5) * 1;
+                mediumScore = (user.Get<int>("Medium") % 3) * 2;
+                hardScore = (user.Get<int>("Hard") % 1) * 3;
+            }
+            this.xp = easyScore + mediumScore + hardScore;
+        }
+        */
     }
 }
