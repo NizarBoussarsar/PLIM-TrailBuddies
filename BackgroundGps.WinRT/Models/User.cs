@@ -24,6 +24,11 @@ namespace BackgroundGps.WinRT.Models
 
         }
 
+        public string toString()
+        {
+            return this.Name + " Tel. " + this.PhoneNumber;
+        }
+
         public User(string name, string phoneNumber)
         {
             this.Name = name;
