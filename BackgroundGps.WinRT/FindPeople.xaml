@@ -9,6 +9,10 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <Grid.Background>
+            <ImageBrush Stretch="Fill" ImageSource="Assets/findbuddies-screen.png"/>
+        </Grid.Background>
+
         <TextBlock
             x:Name="txtSimilar"
             HorizontalAlignment="Left"
@@ -17,7 +21,11 @@
             VerticalAlignment="Top"
             Width="390"
             Height="630"
-            FontSize="25"
-            />
+            FontSize="25" Foreground="Black"
+            >
+            
+        </TextBlock>
+        <Button x:Name="Backbutton" Content="Go back" HorizontalAlignment="Left" Height="17" Margin="10,582,0,0" VerticalAlignment="Top" Width="122" Click="BackButton_Click"/>
     </Grid>
+    
 </Page>

@@ -123,6 +123,11 @@ namespace BackgroundGps.WinRT
             return users;
         }
 
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(MainPage), username);
+        }
+
         private bool CompareUsers(User connectedUser, User otherUser)
         {
             double xpMargin = connectedUser.Xp * 0.05; // 5% de XP 

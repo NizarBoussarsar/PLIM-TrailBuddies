@@ -157,8 +157,10 @@ namespace BackgroundGps.WinRT
         {
             TrackLocationButton.IsEnabled = false;
             StoptrackingButton.IsEnabled = true;
-            startTime = DateTime.Now;
+            StoptrackingButton.Visibility = Visibility.Visible;
+            TrackLocationButton.Visibility = Visibility.Collapsed;
 
+            startTime = DateTime.Now;
 
             var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
@@ -176,6 +178,10 @@ namespace BackgroundGps.WinRT
         {
             TrackLocationButton.IsEnabled = true;
             StoptrackingButton.IsEnabled = false;
+
+            TrackLocationButton.Visibility = Visibility.Visible;
+            StoptrackingButton.Visibility = Visibility.Collapsed;
+
             deviceUseTask.Unregister(true);
 
 
@@ -215,12 +221,9 @@ namespace BackgroundGps.WinRT
                 trailObject["userId"] = username;
 
                 await trailObject.SaveAsync();
-
-                progressRing.IsActive = false;
-
                 //
                 GetAllTrails();
-
+                progressRing.IsActive = false;
             }
         }
 
@@ -254,6 +257,11 @@ namespace BackgroundGps.WinRT
             }
 
             GetX(listResult);
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(StartMenu), username);
         }
 
         private async void GetX(List<ParseObject> listResult)

@@ -112,6 +112,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\findbuddies-screen.png" />
     <Content Include="Assets\login-screen.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
