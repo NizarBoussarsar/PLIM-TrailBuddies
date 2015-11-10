@@ -157,7 +157,10 @@ namespace BackgroundGps.WinRT
         {
             TrackLocationButton.IsEnabled = false;
             StoptrackingButton.IsEnabled = true;
+            StoptrackingButton.Visibility = Visibility.Visible;
+            TrackLocationButton.Visibility = Visibility.Collapsed; 
             startTime = DateTime.Now;
+
 
 
             var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
@@ -254,6 +257,11 @@ namespace BackgroundGps.WinRT
             }
 
             GetX(listResult);
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(StartMenu), username);
         }
 
         private async void GetX(List<ParseObject> listResult)
