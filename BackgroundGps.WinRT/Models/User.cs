@@ -11,9 +11,9 @@ namespace BackgroundGps.WinRT.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
-        public int NbrEasyTrails { get; set; }
-        public int NbrMediumTrails { get; set; }
-        public int NbrHardTrails { get; set; }
+        public int NbrTrailsCluster0 { get; set; }
+        public int NbrTrailsCluster1 { get; set; }
+        public int NbrTrailsCluster2 { get; set; }
         public string CreationDate { get; set; }
         public string LastUpdateDate { get; set; }
         public int Xp { get; set; }
@@ -33,9 +33,9 @@ namespace BackgroundGps.WinRT.Models
         {
             this.Name = name;
             this.PhoneNumber = phoneNumber;
-            this.NbrEasyTrails = 0;
-            this.NbrMediumTrails = 0;
-            this.NbrHardTrails = 0;
+            this.NbrTrailsCluster0 = 0;
+            this.NbrTrailsCluster1 = 0;
+            this.NbrTrailsCluster2 = 0;
             CreationDate = DateTime.Now.ToString();
             LastUpdateDate = DateTime.Now.ToString();
         }
