@@ -11,14 +11,8 @@ using BackgroundGps.WinRT.Models;
 using System.Threading.Tasks;
 using BackgroundGps.WinRT.ViewModel;
 
-
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
-
 namespace BackgroundGps.WinRT
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainPage : Page
     {
 
@@ -210,10 +204,9 @@ namespace BackgroundGps.WinRT
                 trailObject["distance"] = dist;
                 trailObject["duration"] = duration.TotalMinutes;
                 trailObject["userId"] = username;
-
                 await trailObject.SaveAsync();
                 //
-                GetAllTrails();
+                await GetAllTrails();
                 progressRing.IsActive = false;
             }
         }
@@ -292,10 +285,6 @@ namespace BackgroundGps.WinRT
                 i++;
                 await user.SaveAsync();
             }
-
-            System.Diagnostics.Debug.WriteLine("Zero " + zero + " One " + one + " Two " + two);
         }
-
     }
-
 }

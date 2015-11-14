@@ -40,6 +40,5 @@ namespace BackgroundGps.WinRT.Models
             LastUpdateDate = DateTime.Now.ToString();
         }
 
-        //public virtual ICollection<Trail> Trails { get; set; }
     }
 }
