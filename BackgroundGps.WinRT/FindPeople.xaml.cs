@@ -17,7 +17,6 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
 // Pour en savoir plus sur le modèle d’élément Page vierge, consultez la page http://go.microsoft.com/fwlink/?LinkID=390556
 
 namespace BackgroundGps.WinRT
@@ -27,13 +26,16 @@ namespace BackgroundGps.WinRT
     /// </summary>
     public sealed partial class FindPeople : Page
     {
-        private List<User> users;
+        private List<User> users, similarUsers;
+
         private User userConnected;
         private string username;
 
         public FindPeople()
         {
             this.InitializeComponent();
+
+
             try
             {
                 ParseClient.Initialize("tFQtC1M0IhpZCWBBRRmqXCCE3SdUHO76f1RSNDOD", "wX0h5aUBInXq1NzNZIVx5b04kdidb4iGHKPLKidf");
@@ -46,7 +48,12 @@ namespace BackgroundGps.WinRT
             //System.Diagnostics.Debug.WriteLine("XP : " + xp);
 
             users = new List<User>();
+            similarUsers = new List<User>();
             GetAllUsers();
+            System.Diagnostics.Debug.WriteLine("SIZE : " + users.Count);
+            //  similarUsers = new List<User>();
+            ///  this.GetSimilarUsers();
+
         }
 
         /// <summary>
@@ -72,6 +79,7 @@ namespace BackgroundGps.WinRT
                     NbrEasyTrails = item.Get<int>("Easy"),
                     NbrMediumTrails = item.Get<int>("Medium"),
                     NbrHardTrails = item.Get<int>("Hard"),
+                    PhoneNumber = item.Get<string>("Phone"),
                 };
 
                 int easyScore = (u.NbrEasyTrails % 5) * 1;
@@ -83,16 +91,63 @@ namespace BackgroundGps.WinRT
 
                 System.Diagnostics.Debug.WriteLine("XP : " + u.Xp + " NB : " + u.nbTrails);
 
+
                 if (u.Name == username)
                 {
                     userConnected = u;
                 }
                 else
                 {
-                    users.Add(u);
+                    this.users.Add(u);
                 }
             }
+
+            foreach (User user in this.users)
+            {
+                if (CompareUsers(this.userConnected, user))
+                {
+                    this.similarUsers.Add(user);
+                }
+            }
+            int i = 0;
+            foreach (User usr in this.similarUsers)
+            {
+                txtSimilar.Text += i + "- " + usr.Name + " Tel. " + usr.PhoneNumber + " \n";
+            }
         }
+
+
+        private List<User> GetItemsForListView()
+        {
+            System.Diagnostics.Debug.WriteLine("LEN : " + users.Count());
+            return users;
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(MainPage), username);
+        }
+
+        private bool CompareUsers(User connectedUser, User otherUser)
+        {
+            double xpMargin = connectedUser.Xp * 0.05; // 5% de XP 
+            double nbMargin = connectedUser.nbTrails * 0.05; // 5% de XP 
+
+            /// TEST XP
+            if (Math.Abs(connectedUser.Xp - otherUser.Xp) > xpMargin) // Not Equal Bc. XP diffrent 
+            {
+                return false;
+            }
+
+            if (Math.Abs(connectedUser.nbTrails - otherUser.nbTrails) > nbMargin) // Not Equal Bc. XP diffrent 
+            {
+                return false;
+            }
+
+            // if no test fails then equal
+            return true;
+        }
+
 
     }
 }
