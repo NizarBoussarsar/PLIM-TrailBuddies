@@ -1,19 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading;
 using Windows.ApplicationModel.Background;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Parse;
 using BackgroundGps.WinRT.Models;
@@ -266,36 +257,39 @@ namespace BackgroundGps.WinRT
 
         private async void GetX(List<ParseObject> listResult)
         {
-            int zero = 0, one = 0, two = 0;
+            int[] zero = new int[listResult.Count],
+                one = new int[listResult.Count],
+                two = new int[listResult.Count];
+            int i = 0;
+
             foreach (var item in listResult)
             {
-                if (item.Get<string>("userId") == username)
+                switch (item.Get<int>("clusterId"))
                 {
-                    switch (item.Get<int>("clusterId"))
-                    {
-                        case 0:
-                            zero++;
-                            break;
-                        case 1:
-                            one++;
-                            break;
-                        case 2:
-                            two++;
-                            break;
-                        default:
-                            break;
-                    }
+                    case 0:
+                        zero[i]++;
+                        break;
+                    case 1:
+                        one[i]++;
+                        break;
+                    case 2:
+                        two[i]++;
+                        break;
+                    default:
+                        break;
                 }
+                i++;
             }
 
-            var query = ParseObject.GetQuery("Usr").WhereEqualTo("Username", username);
+            var query = ParseObject.GetQuery("Usr").WhereNotEqualTo("objectId", "toto");
             IEnumerable<ParseObject> results = await query.FindAsync();
+            i = 0;
             foreach (var user in results)
             {
-                //Temporary solution because we are not sure about which class represents which level
-                user["Easy"] = zero;
-                user["Medium"] = one;
-                user["Hard"] = two;
+                user["Cluster0"] = zero[i];
+                user["Cluster1"] = one[i];
+                user["Cluster2"] = two[i];
+                i++;
                 await user.SaveAsync();
             }
 
