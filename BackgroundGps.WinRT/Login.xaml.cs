@@ -1,4 +1,5 @@
-﻿using Parse;
+﻿using BackgroundGps.WinRT.Models;
+using Parse;
 using System;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -13,7 +14,7 @@ namespace BackgroundGps.WinRT
         public Login()
         {
             this.InitializeComponent();
-
+            
             try
             {
                 ParseClient.Initialize("tFQtC1M0IhpZCWBBRRmqXCCE3SdUHO76f1RSNDOD", "wX0h5aUBInXq1NzNZIVx5b04kdidb4iGHKPLKidf");
