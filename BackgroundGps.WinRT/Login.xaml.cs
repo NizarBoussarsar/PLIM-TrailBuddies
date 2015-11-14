@@ -30,9 +30,7 @@ namespace BackgroundGps.WinRT
         {
 
             this.InitializeComponent();
-
-
-
+            
             try
             {
                 ParseClient.Initialize("tFQtC1M0IhpZCWBBRRmqXCCE3SdUHO76f1RSNDOD", "wX0h5aUBInXq1NzNZIVx5b04kdidb4iGHKPLKidf");
@@ -56,12 +54,6 @@ namespace BackgroundGps.WinRT
 
         private async void button_Click(object sender, RoutedEventArgs e)
         {
-
-            Trail t = new Trail();
-            await t.GetValues();
-
-            System.Diagnostics.Debug.WriteLine("ALT :" + t.tmpTest);
-
             string username = textBox.Text;
             string password = passwordBox.Password;
 

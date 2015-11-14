@@ -76,21 +76,13 @@ namespace BackgroundGps.WinRT
                 {
                     Id = item.ObjectId,
                     Name = item.Get<string>("Username"),
-                    NbrEasyTrails = item.Get<int>("Easy"),
-                    NbrMediumTrails = item.Get<int>("Medium"),
-                    NbrHardTrails = item.Get<int>("Hard"),
+                    NbrTrailsCluster0 = item.Get<int>("Cluster0"),
+                    NbrTrailsCluster1 = item.Get<int>("Cluster1"),
+                    NbrTrailsCluster2 = item.Get<int>("Cluster2"),
                     PhoneNumber = item.Get<string>("Phone"),
                 };
 
-                int easyScore = (u.NbrEasyTrails % 5) * 1;
-                int mediumScore = (u.NbrMediumTrails % 3) * 2;
-                int hardScore = (u.NbrHardTrails % 1) * 3;
-
-                u.nbTrails = u.NbrEasyTrails + u.NbrMediumTrails + u.NbrHardTrails;
-                u.Xp = easyScore + mediumScore + hardScore;
-
-                System.Diagnostics.Debug.WriteLine("XP : " + u.Xp + " NB : " + u.nbTrails);
-
+                u.nbTrails = u.NbrTrailsCluster0 + u.NbrTrailsCluster1 + u.NbrTrailsCluster2;
 
                 if (u.Name == username)
                 {
@@ -109,6 +101,7 @@ namespace BackgroundGps.WinRT
                     this.similarUsers.Add(user);
                 }
             }
+
             int i = 0;
             foreach (User usr in this.similarUsers)
             {
@@ -128,24 +121,51 @@ namespace BackgroundGps.WinRT
             Frame.Navigate(typeof(MainPage), username);
         }
 
-        private bool CompareUsers(User connectedUser, User otherUser)
+        private bool CompareUsersTrailFrq(User connectedUser, User otherUser)
         {
-            double xpMargin = connectedUser.Xp * 0.05; // 5% de XP 
-            double nbMargin = connectedUser.nbTrails * 0.05; // 5% de XP 
+            float frqMargin = 0.05f;
 
-            /// TEST XP
-            if (Math.Abs(connectedUser.Xp - otherUser.Xp) > xpMargin) // Not Equal Bc. XP diffrent 
+            float connectedfrq0, connectedfrq1, connectedfrq2;
+            float frq0, frq1, frq2;
+
+            connectedfrq0 = connectedUser.NbrTrailsCluster0 / connectedUser.nbTrails;
+            connectedfrq1 = connectedUser.NbrTrailsCluster1 / connectedUser.nbTrails;
+            connectedfrq2 = connectedUser.NbrTrailsCluster2 / connectedUser.nbTrails;
+
+            frq0 = otherUser.NbrTrailsCluster0 / otherUser.nbTrails;
+            frq1 = otherUser.NbrTrailsCluster1 / otherUser.nbTrails;
+            frq2 = otherUser.NbrTrailsCluster2 / otherUser.nbTrails;
+
+            if (Math.Abs(connectedfrq0 - frq0) > frqMargin)
             {
                 return false;
             }
+
+            if (Math.Abs(connectedfrq1 - frq1) > frqMargin)
+            {
+                return false;
+            }
+
+            if (Math.Abs(connectedfrq2 - frq2) > frqMargin)
+            {
+                return false;
+            }
+
+
+            return true;
+        }
+
+        private bool CompareUsers(User connectedUser, User otherUser)
+        {
+            double nbMargin = connectedUser.nbTrails * 0.05; // 5% de XP 
 
             if (Math.Abs(connectedUser.nbTrails - otherUser.nbTrails) > nbMargin) // Not Equal Bc. XP diffrent 
             {
                 return false;
             }
 
-            // if no test fails then equal
-            return true;
+            return CompareUsersTrailFrq(connectedUser, otherUser);
+
         }
 
 
