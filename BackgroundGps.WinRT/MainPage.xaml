@@ -15,7 +15,7 @@
         <Button x:Name="TrackLocationButton" Content="Track" HorizontalAlignment="Left" Margin="144,187,0,0" VerticalAlignment="Top" Click="TrackLocationButton_Click"/>
         <Button x:Name="StoptrackingButton" Content="Stop" HorizontalAlignment="Left" Margin="144,187,0,0" VerticalAlignment="Top" Click="StoptrackingButton_Click" Visibility="Collapsed"/>
         <ProgressRing x:Name="progressRing" IsActive="False" Height="150" Width="150" Margin="125,285,125,205" Background="{x:Null}" />
-        <Button x:Name="Backbutton" Content="Go back" HorizontalAlignment="Left" Height="17" Margin="10,582,0,0" VerticalAlignment="Top" Width="122" Click="BackButton_Click"/>
+       
 
 
     </Grid>

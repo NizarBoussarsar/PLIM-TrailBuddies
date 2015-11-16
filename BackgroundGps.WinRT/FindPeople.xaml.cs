@@ -3,6 +3,7 @@ using Parse;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Windows.Phone.UI.Input;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -20,6 +21,7 @@ namespace BackgroundGps.WinRT
         public FindPeople()
         {
             this.InitializeComponent();
+
 
             try
             {
@@ -94,10 +96,7 @@ namespace BackgroundGps.WinRT
             return users;
         }
 
-        private void BackButton_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(typeof(MainPage), username);
-        }
+      
 
         private bool CompareUsersTrailFrq(User connectedUser, User otherUser)
         {

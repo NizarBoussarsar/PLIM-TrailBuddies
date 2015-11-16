@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using Windows.Phone.UI.Input;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 using Windows.UI.Xaml.Navigation;
@@ -12,12 +13,15 @@ namespace BackgroundGps.WinRT
         public StartMenu()
         {
             this.InitializeComponent();
+
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             username = e.Parameter.ToString();
         }
+
+
 
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
