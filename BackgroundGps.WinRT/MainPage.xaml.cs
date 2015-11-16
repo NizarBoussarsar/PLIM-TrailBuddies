@@ -33,12 +33,12 @@ namespace BackgroundGps.WinRT
 
             coordonates = new List<string>();
 
-            //Button
+            //Buton
             StoptrackingButton.IsEnabled = false;
 
             try
             {
-                ParseClient.Initialize("F39gWYsGvGCCvuqkPiYdgPQDcjchYS3SmRt2n8oH", "GZaxaRgFQi1iDwTt2o5rACtWyYQc0IDkNhIVUXXt");
+                ParseClient.Initialize("tFQtC1M0IhpZCWBBRRmqXCCE3SdUHO76f1RSNDOD", "wX0h5aUBInXq1NzNZIVx5b04kdidb4iGHKPLKidf");
             }
             catch (Exception)
             {
@@ -206,13 +206,7 @@ namespace BackgroundGps.WinRT
                 trailObject["userId"] = username;
                 await trailObject.SaveAsync();
                 //
-                try { 
                 await GetAllTrails();
-                }
-                catch(Exception err)
-                {
-                    System.Diagnostics.Debug.WriteLine(err);
-                }
                 progressRing.IsActive = false;
             }
         }
@@ -249,7 +243,10 @@ namespace BackgroundGps.WinRT
             GetX(listResult);
         }
 
-       
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(StartMenu), username);
+        }
 
         private async void GetX(List<ParseObject> listResult)
         {
