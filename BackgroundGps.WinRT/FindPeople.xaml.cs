@@ -33,7 +33,9 @@ namespace BackgroundGps.WinRT
 
             users = new List<User>();
             similarUsers = new List<User>();
+
             GetAllUsers();
+
             System.Diagnostics.Debug.WriteLine("SIZE : " + users.Count);
 
 
