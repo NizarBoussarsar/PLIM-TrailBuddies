@@ -240,7 +240,7 @@ namespace BackgroundGps.WinRT
                 await pObject.SaveAsync();
             }
 
-            GetX(listResult);
+            UpdateUsers(listResult);
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -248,7 +248,7 @@ namespace BackgroundGps.WinRT
             Frame.Navigate(typeof(StartMenu), username);
         }
 
-        private async void GetX(List<ParseObject> listResult)
+        private async void UpdateUsers(List<ParseObject> listResult)
         {
             int[] zero = new int[listResult.Count],
                 one = new int[listResult.Count],

@@ -1,14 +1,9 @@
 ﻿using BackgroundGps.Engine.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
-using Windows.Data.Xml.Dom;
 using Windows.Devices.Geolocation;
 using Windows.Devices.Sensors;
-using Windows.UI.Notifications;
 
 namespace BackgroundGps.Engine
 {
@@ -37,9 +32,8 @@ namespace BackgroundGps.Engine
 
                 startTime = Convert.ToDateTime(tmp.ToString());
 
-                System.Diagnostics.Debug.WriteLine("Start Time  " + startTime.ToString());
+                System.Diagnostics.Debug.WriteLine("Start Time " + startTime.ToString());
             }
-
 
             coordonates = new List<string>();
 
@@ -80,13 +74,10 @@ namespace BackgroundGps.Engine
                         Geoposition pos = await _locator.GetGeopositionAsync();
 
                         System.Diagnostics.Debug.WriteLine("LAT " + pos.Coordinate.Latitude + " " + pos.Coordinate.Longitude);
-
-
                         updateCoordList(pos.Coordinate.Latitude, pos.Coordinate.Longitude);
 
                         //update EndTime
                         this.setEndTime();
-
                     }
                     catch (Exception ex)
                     {
@@ -128,17 +119,13 @@ namespace BackgroundGps.Engine
             }
             try
             {
-
                 localSettings.Values.Add("endTime", endTime.ToString());
                 System.Diagnostics.Debug.WriteLine("END time set");
-
             }
             catch (Exception)
             {
                 System.Diagnostics.Debug.WriteLine("END time Couldn't be set");
             }
-
-
         }
 
 
